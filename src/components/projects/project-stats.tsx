@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { FolderOpen, CheckCircle, Clock, AlertTriangle } from "lucide-react";
 
 interface ProjectStatsProps {

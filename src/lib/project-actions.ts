@@ -577,6 +577,46 @@ export async function getTasksByProject(projectId: string): Promise<TaskWithAssi
   }
 }
 
+export async function getTaskById(taskId: string): Promise<TaskWithAssignee | null> {
+  try {
+    const user = await getCurrentUser();
+    if (!user?.id) {
+      throw new Error("Authentication required");
+    }
+
+    const task = await prisma.task.findFirst({
+      where: {
+        id: taskId,
+        project: {
+          userId: user.id,
+        },
+      },
+      include: {
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            employeeId: true,
+            department: true,
+            position: true,
+          },
+        },
+        project: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
+    });
+
+    return task;
+  } catch (error) {
+    console.error("Get task by ID error:", error);
+    throw new Error("Failed to fetch task");
+  }
+}
+
 export async function updateTaskStatus(id: string, status: string): Promise<ActionResult> {
   try {
     const user = await getCurrentUser();

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getProjectStatusColor, getProjectStatusLabel, PROJECT_STATUS } from "@/lib/project-validation";
-import { CalendarDays, DollarSign, Search, Users, MoreHorizontal, Eye, Edit, Trash2 } from "lucide-react";
+import { CalendarDays, DollarSign, Search, Users, MoreHorizontal, Eye, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
 import {
@@ -18,18 +18,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { deleteProject } from "@/lib/project-actions";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { Project } from "@/lib/project-validation";
 
 interface ProjectsListProps {
-  projects: any[];
+  projects: Project[];
 }
 
 export function ProjectsList({ projects: initialProjects }: ProjectsListProps) {
   const [projects, setProjects] = useState(initialProjects);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const router = useRouter();
 
   const filteredProjects = projects.filter((project) => {
     const matchesSearch =

@@ -2,22 +2,11 @@
 
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/component                  <TableCell>
-                    <Badge
-                      className={getPriorityColor(task.priority)}
-                      variant="secondary"
-                    >
-                      {task.priority}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{task.assigneeId ? getEmployeeName(task.assigneeId) : "Unassigned"}</TableCell>
-                  <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "-"}</TableCell>
-                  <TableCell>{new Date(task.createdAt).toLocaleDateString()}</TableCell>
-                </TableRow>
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter, Plus } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import { TaskStatus, TaskPriority, type Task, type User } from "@/lib/project-validation";
 import { useRouter } from "next/navigation";
 
@@ -38,7 +27,9 @@ const statusColors = {
   [TaskStatus.TODO]: "bg-slate-100 text-slate-800",
   [TaskStatus.IN_PROGRESS]: "bg-blue-100 text-blue-800",
   [TaskStatus.IN_REVIEW]: "bg-yellow-100 text-yellow-800",
+  [TaskStatus.TESTING]: "bg-purple-100 text-purple-800",
   [TaskStatus.DONE]: "bg-green-100 text-green-800",
+  [TaskStatus.CANCELLED]: "bg-red-100 text-red-800",
 };
 
 export function TasksBacklog({ tasks, projectId, employees }: TasksBacklogProps) {
@@ -52,13 +43,16 @@ export function TasksBacklog({ tasks, projectId, employees }: TasksBacklogProps)
     const employee = employees.find((e) => e.id === employeeId);
     return employee?.name || "Unassigned";
   };
-
-  const filteredTasks = tasks.filter((task) => {    const matchesSearch =
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch =
       task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       task.description?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || task.status === statusFilter;
     const matchesPriority = priorityFilter === "all" || task.priority === priorityFilter;
-    const matchesAssignee = assigneeFilter === "all" || task.assigneeId === assigneeFilter;
+    const matchesAssignee =
+      assigneeFilter === "all" ||
+      (assigneeFilter === "unassigned" && !task.assigneeId) ||
+      task.assigneeId === assigneeFilter;
 
     return matchesSearch && matchesStatus && matchesPriority && matchesAssignee;
   });
@@ -126,10 +120,10 @@ export function TasksBacklog({ tasks, projectId, employees }: TasksBacklogProps)
         >
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Assignee" />
-          </SelectTrigger>
+          </SelectTrigger>{" "}
           <SelectContent>
             <SelectItem value="all">All Assignees</SelectItem>
-            <SelectItem value="">Unassigned</SelectItem>
+            <SelectItem value="unassigned">Unassigned</SelectItem>
             {employees.map((employee) => (
               <SelectItem
                 key={employee.id}
@@ -207,7 +201,7 @@ export function TasksBacklog({ tasks, projectId, employees }: TasksBacklogProps)
                       {task.priority}
                     </Badge>
                   </TableCell>
-                  <TableCell>{task.assignedToId ? getEmployeeName(task.assignedToId) : "Unassigned"}</TableCell>
+                  <TableCell>{task.assigneeId ? getEmployeeName(task.assigneeId) : "Unassigned"}</TableCell>
                   <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "-"}</TableCell>
                   <TableCell>{new Date(task.createdAt).toLocaleDateString()}</TableCell>
                 </TableRow>
