@@ -1,6 +1,6 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+// import { PrismaAdapter } from "@auth/prisma-adapter";
 import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
@@ -28,7 +28,8 @@ declare module "next-auth" {
 }
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
+  // Remove PrismaAdapter temporarily to debug the issue
+  // adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -37,55 +38,75 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Missing credentials");
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            console.error("Missing credentials");
+            return null;
+          }
+
+          // Validate email format
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(credentials.email as string)) {
+            console.error("Invalid email format");
+            return null;
+          }
+
+          const user = await prisma.user.findUnique({
+            where: {
+              email: (credentials.email as string).toLowerCase(),
+            },
+          });
+
+          if (!user || !user.password) {
+            console.error("User not found or no password");
+            return null;
+          }
+
+          const isPasswordValid = await compare(credentials.password as string, user.password);
+
+          if (!isPasswordValid) {
+            console.error("Invalid password");
+            return null;
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role as UserRole,
+            image: user.image,
+          };
+        } catch (error) {
+          console.error("Authorization error:", error);
+          return null;
         }
-
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(credentials.email as string)) {
-          throw new Error("Invalid email format");
-        }
-
-        const user = await prisma.user.findUnique({
-          where: {
-            email: (credentials.email as string).toLowerCase(),
-          },
-        });
-
-        if (!user || !user.password) {
-          throw new Error("Invalid credentials");
-        }
-
-        const isPasswordValid = await compare(credentials.password as string, user.password);
-
-        if (!isPasswordValid) {
-          throw new Error("Invalid credentials");
-        }
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role as UserRole,
-          image: user.image,
-        };
       },
     }),
   ],
   callbacks: {
     async session({ session, token }) {
-      if (token.sub && session.user) {
-        session.user.id = token.sub;
-        session.user.role = token.role as UserRole;
+      try {
+        if (token.sub && session.user) {
+          session.user.id = token.sub;
+          session.user.role = token.role as UserRole;
+        }
+        return session;
+      } catch (error) {
+        console.error("Session callback error:", error);
+        return session;
       }
-      return session;
     },
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.role = user.role;
+      try {
+        if (user) {
+          token.id = user.id;
+          token.role = user.role;
+        }
+        return token;
+      } catch (error) {
+        console.error("JWT callback error:", error);
+        return token;
       }
-      return token;
     },
     async redirect({ url, baseUrl }) {
       // Allows relative callback URLs
