@@ -7,9 +7,9 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {

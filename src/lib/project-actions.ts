@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
   projectSchema,
+  projectBaseSchema,
   taskSchema,
   type ProjectInput,
   type TaskInput,
@@ -75,10 +76,8 @@ export async function updateProject(id: string, data: Partial<ProjectInput>): Pr
 
     if (!existingProject) {
       return { success: false, error: "Project not found" };
-    }
-
-    // Validate input
-    const validatedData = projectSchema.partial().parse(data);
+    } // Validate input
+    const validatedData = projectBaseSchema.partial().parse(data);
 
     // Update project
     const updatedProject = await prisma.project.update({

@@ -6,12 +6,12 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
 interface NewTaskPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     status?: string;
-  };
+  }>;
 }
 
 export default async function NewTaskPage({ params, searchParams }: NewTaskPageProps) {

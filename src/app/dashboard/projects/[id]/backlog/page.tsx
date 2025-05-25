@@ -7,9 +7,9 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 interface BacklogPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function BacklogPage({ params }: BacklogPageProps) {

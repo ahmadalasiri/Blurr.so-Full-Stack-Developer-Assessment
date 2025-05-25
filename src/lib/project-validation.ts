@@ -1,27 +1,28 @@
 import { z } from "zod";
 
-// Project validation schemas
-export const projectSchema = z
-  .object({
-    title: z.string().min(3, "Title must be at least 3 characters").max(100, "Title must be less than 100 characters"),
-    description: z.string().max(1000, "Description must be less than 1000 characters").optional().or(z.literal("")),
-    status: z.enum(["PLANNING", "IN_PROGRESS", "ON_HOLD", "COMPLETED", "CANCELLED"]).default("PLANNING"),
-    startDate: z.date().optional().nullable(),
-    endDate: z.date().optional().nullable(),
-    budget: z.number().min(0, "Budget must be positive").optional().nullable(),
-  })
-  .refine(
-    (data) => {
-      if (data.startDate && data.endDate) {
-        return data.startDate <= data.endDate;
-      }
-      return true;
-    },
-    {
-      message: "End date must be after start date",
-      path: ["endDate"],
-    },
-  );
+// Base schema for project validation (supports .partial())
+export const projectBaseSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters").max(100, "Title must be less than 100 characters"),
+  description: z.string().max(1000, "Description must be less than 1000 characters").optional().or(z.literal("")),
+  status: z.enum(["PLANNING", "IN_PROGRESS", "ON_HOLD", "COMPLETED", "CANCELLED"]).default("PLANNING"),
+  startDate: z.date().optional().nullable(),
+  endDate: z.date().optional().nullable(),
+  budget: z.number().min(0, "Budget must be positive").optional().nullable(),
+});
+
+// Full schema with refinement for create/update operations
+export const projectSchema = projectBaseSchema.refine(
+  (data) => {
+    if (data.startDate && data.endDate) {
+      return data.startDate <= data.endDate;
+    }
+    return true;
+  },
+  {
+    message: "End date must be after start date",
+    path: ["endDate"],
+  },
+);
 
 export const projectFormSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(100, "Title must be less than 100 characters"),
