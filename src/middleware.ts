@@ -12,7 +12,7 @@ const authRoutes = ["/login", "/register"];
 const adminRoutes = ["/dashboard/admin", "/dashboard/admin/:path*"];
 
 // Define manager-only routes
-const managerRoutes = ["/dashboard/salary", "/dashboard/reports"];
+const managerRoutes = ["/dashboard/reports"];
 
 export default async function middleware(request: NextRequest) {
   const session = await auth();

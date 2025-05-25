@@ -23,7 +23,7 @@ export function SalaryTable({ onEdit, onView, onDelete, onAdd }: SalaryTableProp
   const [salaryRecords, setSalaryRecords] = useState<SalaryRecordWithEmployee[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    month: "",
+    month: "all",
     year: new Date().getFullYear().toString(),
     department: "",
     employeeId: "",
@@ -50,8 +50,8 @@ export function SalaryTable({ onEdit, onView, onDelete, onAdd }: SalaryTableProp
     setLoading(true);
     try {
       const filterParams = {
-        ...(filters.month && { month: parseInt(filters.month) }),
-        ...(filters.year && { year: parseInt(filters.year) }),
+        ...(filters.month && filters.month !== "all" && { month: parseInt(filters.month) }),
+        ...(filters.year && filters.year !== "all" && { year: parseInt(filters.year) }),
         ...(filters.department && { department: filters.department }),
         ...(filters.employeeId && { employeeId: filters.employeeId }),
       };
@@ -122,9 +122,9 @@ export function SalaryTable({ onEdit, onView, onDelete, onAdd }: SalaryTableProp
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select Year" />
-                </SelectTrigger>
+                </SelectTrigger>{" "}
                 <SelectContent>
-                  <SelectItem value="">All Years</SelectItem>
+                  <SelectItem value="all">All Years</SelectItem>
                   {years.map((year) => (
                     <SelectItem
                       key={year}
@@ -147,9 +147,9 @@ export function SalaryTable({ onEdit, onView, onDelete, onAdd }: SalaryTableProp
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select Month" />
-                </SelectTrigger>
+                </SelectTrigger>{" "}
                 <SelectContent>
-                  <SelectItem value="">All Months</SelectItem>
+                  <SelectItem value="all">All Months</SelectItem>
                   {months.map((month) => (
                     <SelectItem
                       key={month.value}
