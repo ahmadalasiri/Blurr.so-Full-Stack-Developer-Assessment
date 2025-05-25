@@ -110,30 +110,33 @@ export function SalaryRecordForm({ salaryRecord, onSuccess, onCancel }: SalaryRe
     };
 
     loadEmployees();
-  }, [isEditing, salaryRecord]);
-
-  // Watch form values for calculation
-  const watchedValues = form.watch();
+  }, [isEditing, salaryRecord]); // Watch specific form values for calculation (excluding employeeId to prevent loops)
+  const bonus = form.watch("bonus");
+  const deductions = form.watch("deductions");
+  const allowances = form.watch("allowances");
+  const overtimeHours = form.watch("overtimeHours");
+  const overtimeRate = form.watch("overtimeRate");
 
   useEffect(() => {
     if (selectedEmployee) {
-      const values = form.getValues();
       const calc = calculateSalary(
         selectedEmployee.basicSalary,
-        parseFloat(values.bonus) || 0,
-        parseFloat(values.deductions) || 0,
-        parseFloat(values.allowances) || 0,
-        parseFloat(values.overtimeHours) || 0,
-        parseFloat(values.overtimeRate) || 0,
+        parseFloat(bonus) || 0,
+        parseFloat(deductions) || 0,
+        parseFloat(allowances) || 0,
+        parseFloat(overtimeHours) || 0,
+        parseFloat(overtimeRate) || 0,
       );
       setCalculation(calc);
     }
-  }, [watchedValues, selectedEmployee, form]);
-
+  }, [selectedEmployee, bonus, deductions, allowances, overtimeHours, overtimeRate]);
   const handleEmployeeChange = (employeeId: string) => {
     const employee = employees.find((emp) => emp.id === employeeId);
     setSelectedEmployee(employee || null);
-    form.setValue("employeeId", employeeId);
+    // Only update form if value is different to prevent loops
+    if (form.getValues("employeeId") !== employeeId) {
+      form.setValue("employeeId", employeeId);
+    }
   };
   const onSubmit = async (data: SalaryRecordFormData) => {
     if (!selectedEmployee) {
