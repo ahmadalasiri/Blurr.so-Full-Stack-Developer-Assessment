@@ -18,6 +18,7 @@ import { Switch } from "@/components/ui/switch";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { ClientOnly } from "@/components/ui/client-only";
 
 import {
   employeeFormSchema,
@@ -168,7 +169,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
               suppressHydrationWarning
             >
               <Label htmlFor="employeeId">Employee ID *</Label>
-              <div suppressHydrationWarning>
+              <ClientOnly>
                 <Input
                   id="employeeId"
                   {...register("employeeId")}
@@ -177,7 +178,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
                   disabled={isLoading}
                   suppressHydrationWarning
                 />
-              </div>
+              </ClientOnly>
               {errors.employeeId && <p className="text-sm text-red-500">{errors.employeeId.message}</p>}
             </div>{" "}
             {/* Name */}
@@ -186,7 +187,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
               suppressHydrationWarning
             >
               <Label htmlFor="name">Full Name *</Label>
-              <div suppressHydrationWarning>
+              <ClientOnly>
                 <Input
                   id="name"
                   {...register("name")}
@@ -195,7 +196,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
                   disabled={isLoading}
                   suppressHydrationWarning
                 />
-              </div>
+              </ClientOnly>
               {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
             </div>{" "}
             {/* Email */}
@@ -204,7 +205,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
               suppressHydrationWarning
             >
               <Label htmlFor="email">Email</Label>
-              <div suppressHydrationWarning>
+              <ClientOnly>
                 <Input
                   id="email"
                   type="email"
@@ -214,7 +215,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
                   disabled={isLoading}
                   suppressHydrationWarning
                 />
-              </div>
+              </ClientOnly>
               {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
             </div>{" "}
             {/* Joining Date */}
@@ -223,7 +224,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
               suppressHydrationWarning
             >
               <Label>Joining Date *</Label>
-              <div suppressHydrationWarning>
+              <ClientOnly>
                 <Popover
                   open={calendarOpen}
                   onOpenChange={setCalendarOpen}
@@ -256,7 +257,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
                     />
                   </PopoverContent>
                 </Popover>
-              </div>
+              </ClientOnly>
               {errors.joiningDate && <p className="text-sm text-red-500">{errors.joiningDate.message}</p>}
             </div>{" "}
             {/* Basic Salary */}
@@ -265,7 +266,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
               suppressHydrationWarning
             >
               <Label htmlFor="basicSalary">Basic Salary *</Label>
-              <div suppressHydrationWarning>
+              <ClientOnly>
                 <Input
                   id="basicSalary"
                   type="number"
@@ -277,7 +278,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
                   disabled={isLoading}
                   suppressHydrationWarning
                 />
-              </div>
+              </ClientOnly>
               {errors.basicSalary && <p className="text-sm text-red-500">{errors.basicSalary.message}</p>}
             </div>{" "}
             {/* Department */}
@@ -286,7 +287,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
               suppressHydrationWarning
             >
               <Label htmlFor="department">Department</Label>
-              <div suppressHydrationWarning>
+              <ClientOnly>
                 <Select
                   value={watch("department")}
                   onValueChange={(value) => setValue("department", value)}
@@ -294,7 +295,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
                 >
                   <SelectTrigger className={errors.department ? "border-red-500" : ""}>
                     <SelectValue placeholder="Select department" />
-                  </SelectTrigger>{" "}
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">No Department</SelectItem>
                     {DEPARTMENTS.map((dept) => (
@@ -307,7 +308,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
+              </ClientOnly>
               {errors.department && <p className="text-sm text-red-500">{errors.department.message}</p>}
             </div>{" "}
             {/* Position */}
@@ -316,7 +317,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
               suppressHydrationWarning
             >
               <Label htmlFor="position">Position</Label>
-              <div suppressHydrationWarning>
+              <ClientOnly>
                 <Select
                   value={watch("position")}
                   onValueChange={(value) => setValue("position", value)}
@@ -324,7 +325,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
                 >
                   <SelectTrigger className={errors.position ? "border-red-500" : ""}>
                     <SelectValue placeholder="Select position" />
-                  </SelectTrigger>{" "}
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">No Position</SelectItem>
                     {POSITIONS.map((pos) => (
@@ -337,7 +338,7 @@ export function EmployeeForm({ employee, onSuccess, onCancel }: EmployeeFormProp
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
+              </ClientOnly>
               {errors.position && <p className="text-sm text-red-500">{errors.position.message}</p>}
             </div>
             {/* Active Status */}

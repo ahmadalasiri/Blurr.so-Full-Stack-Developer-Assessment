@@ -215,10 +215,7 @@ export async function getEmployee(id: string): Promise<ActionResult> {
           take: 5, // Latest 5 tasks
         },
         salaryRecords: {
-          orderBy: {
-            year: "desc",
-            month: "desc",
-          },
+          orderBy: [{ year: "desc" }, { month: "desc" }],
           take: 12, // Latest 12 months
         },
         _count: {
