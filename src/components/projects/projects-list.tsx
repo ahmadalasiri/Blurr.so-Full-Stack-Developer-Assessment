@@ -19,10 +19,10 @@ import {
 import { deleteProject } from "@/lib/project-actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { Project } from "@/lib/project-validation";
+import { ProjectWithTasks } from "@/lib/project-actions";
 
 interface ProjectsListProps {
-  projects: Project[];
+  projects: ProjectWithTasks[];
 }
 
 export function ProjectsList({ projects: initialProjects }: ProjectsListProps) {

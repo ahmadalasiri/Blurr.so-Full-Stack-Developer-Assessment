@@ -1,15 +1,12 @@
 import { redirect } from "next/navigation";
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import { MobileSidebar } from "@/components/dashboard/mobile-sidebar";
+import { ChatInterface } from "@/components/chatbot/chat-interface";
 import { auth } from "@/auth";
 
-export default async function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
-  
+
   if (!session?.user) {
     redirect("/login");
   }
@@ -23,20 +20,19 @@ export default async function DashboardLayout({
             <span className="font-semibold">Blurr.so HR Portal</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">
-              {session.user.name || session.user.email}
-            </span>
+            <span className="text-sm text-muted-foreground">{session.user.name || session.user.email}</span>
           </div>
         </div>
       </header>
-      
+
       <div className="flex flex-1 overflow-hidden">
         <DashboardSidebar />
-        
-        <main className="flex-1 overflow-y-auto">
-          {children}
-        </main>
+
+        <main className="flex-1 overflow-y-auto">{children}</main>
+
+        {/* AI Chatbot */}
+        <ChatInterface />
       </div>
     </div>
   );
-} 
+}
