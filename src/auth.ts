@@ -4,12 +4,14 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
-// Define UserRole enum manually since Prisma client needs regeneration
-enum UserRole {
-  USER = "USER",
-  ADMIN = "ADMIN",
-  MANAGER = "MANAGER",
-}
+// Define UserRole to match Prisma schema
+const UserRole = {
+  USER: "USER",
+  ADMIN: "ADMIN",
+  MANAGER: "MANAGER",
+} as const;
+
+type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -60,12 +62,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (!isPasswordValid) {
           throw new Error("Invalid credentials");
         }
-
         return {
           id: user.id,
           email: user.email,
           name: user.name,
-          role: user.role,
+          role: user.role as UserRole,
           image: user.image,
         };
       },
