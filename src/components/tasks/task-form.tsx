@@ -35,18 +35,19 @@ interface TaskFormProps {
     assigneeId?: string;
   };
   projectId: string;
+  initialStatus?: string;
   onSuccess?: () => void;
 }
 
-export function TaskForm({ task, projectId, onSuccess }: TaskFormProps) {
+export function TaskForm({ task, projectId, initialStatus, onSuccess }: TaskFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [employees, setEmployees] = useState<
     Array<{
       id: string;
       name: string;
       employeeId: string;
-      department?: string;
-      position?: string;
+      department?: string | null;
+      position?: string | null;
     }>
   >([]);
   const router = useRouter();
@@ -56,7 +57,7 @@ export function TaskForm({ task, projectId, onSuccess }: TaskFormProps) {
       title: task?.title || "",
       description: task?.description || "",
       priority: task?.priority || "MEDIUM",
-      status: task?.status || "TODO",
+      status: task?.status || initialStatus || "TODO",
       estimatedHours: task?.estimatedHours ? task.estimatedHours.toString() : "",
       actualHours: task?.actualHours ? task.actualHours.toString() : "",
       dueDate: task?.dueDate ? new Date(task.dueDate).toISOString().split("T")[0] : "",

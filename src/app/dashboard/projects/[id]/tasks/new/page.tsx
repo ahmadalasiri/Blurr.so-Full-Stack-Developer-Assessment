@@ -9,10 +9,14 @@ interface NewTaskPageProps {
   params: {
     id: string;
   };
+  searchParams: {
+    status?: string;
+  };
 }
 
-export default async function NewTaskPage({ params }: NewTaskPageProps) {
+export default async function NewTaskPage({ params, searchParams }: NewTaskPageProps) {
   const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
   const project = await getProjectById(resolvedParams.id);
 
   if (!project) {
@@ -36,9 +40,12 @@ export default async function NewTaskPage({ params }: NewTaskPageProps) {
           <h1 className="text-2xl font-bold tracking-tight">Create Task</h1>
           <p className="text-muted-foreground">Add a new task to {project.title}</p>
         </div>
-      </div>
+      </div>{" "}
       <div className="max-w-2xl">
-        <TaskForm projectId={resolvedParams.id} />
+        <TaskForm
+          projectId={resolvedParams.id}
+          initialStatus={resolvedSearchParams.status}
+        />
       </div>
     </div>
   );

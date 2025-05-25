@@ -38,7 +38,9 @@ const statusColumns = [
   { status: TaskStatus.TODO, title: "To Do", color: "bg-slate-100" },
   { status: TaskStatus.IN_PROGRESS, title: "In Progress", color: "bg-blue-100" },
   { status: TaskStatus.IN_REVIEW, title: "In Review", color: "bg-yellow-100" },
+  { status: TaskStatus.TESTING, title: "Testing", color: "bg-orange-100" },
   { status: TaskStatus.DONE, title: "Done", color: "bg-green-100" },
+  { status: TaskStatus.CANCELLED, title: "Cancelled", color: "bg-red-100" },
 ];
 
 const priorityColors = {
@@ -263,7 +265,7 @@ export function KanbanBoard({ tasks, projectId, employees }: KanbanBoardProps) {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {" "}
         {statusColumns.map((column) => (
           <DroppableColumn
