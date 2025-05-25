@@ -174,11 +174,6 @@ model SalaryRecord {
   deductions  Float @default(0)
   totalSalary Float // Calculated field
 
-  // Additional fields
-  overtimeHours Int?   @default(0)
-  overtimeRate  Float? @default(0)
-  allowances    Float  @default(0)
-
   // Status and notes
   status      SalaryStatus @default(DRAFT)
   notes       String?

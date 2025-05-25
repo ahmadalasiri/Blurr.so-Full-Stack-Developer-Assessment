@@ -240,7 +240,7 @@ export default function SalaryDashboard() {
 
               {/* Salary Breakdown */}
               <div className="space-y-4">
-                <h3 className="text-lg font-medium">Salary Breakdown</h3>
+                <h3 className="text-lg font-medium">Salary Breakdown</h3>{" "}
                 <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
                   <div className="space-y-2">
                     <div className="flex justify-between">
@@ -250,14 +250,6 @@ export default function SalaryDashboard() {
                     <div className="flex justify-between">
                       <span className="text-sm text-gray-600">Bonus:</span>
                       <span>{formatCurrency(viewingRecord.bonus)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Allowances:</span>
-                      <span>{formatCurrency(viewingRecord.allowances)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Overtime Pay:</span>
-                      <span>{formatCurrency(viewingRecord.overtimePay)}</span>
                     </div>
                     <div className="flex justify-between font-medium">
                       <span>Gross Salary:</span>
@@ -282,22 +274,6 @@ export default function SalaryDashboard() {
                     </div>
                   </div>
                 </div>
-
-                {/* Overtime Details */}
-                {viewingRecord.overtimeHours > 0 && (
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <h4 className="font-medium mb-2">Overtime Details</h4>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-600">Hours:</span> {viewingRecord.overtimeHours}
-                      </div>
-                      <div>
-                        <span className="text-gray-600">Rate:</span> {formatCurrency(viewingRecord.overtimeRate)}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {/* Notes */}
                 {viewingRecord.notes && (
                   <div className="space-y-2">

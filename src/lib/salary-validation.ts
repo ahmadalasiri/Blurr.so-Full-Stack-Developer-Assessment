@@ -7,9 +7,6 @@ export const salaryRecordSchema = z.object({
   year: z.number().min(2020).max(2030, "Year must be between 2020 and 2030"),
   bonus: z.number().min(0, "Bonus must be positive").default(0),
   deductions: z.number().min(0, "Deductions must be positive").default(0),
-  allowances: z.number().min(0, "Allowances must be positive").default(0),
-  overtimeHours: z.number().min(0, "Overtime hours must be positive").default(0),
-  overtimeRate: z.number().min(0, "Overtime rate must be positive").default(0),
   notes: z.string().max(500, "Notes must be less than 500 characters").optional(),
 });
 
@@ -28,9 +25,6 @@ export const salaryRecordFormSchema = z.object({
   year: z.string().min(1, "Year is required"),
   bonus: z.string(),
   deductions: z.string(),
-  allowances: z.string(),
-  overtimeHours: z.string(),
-  overtimeRate: z.string(),
   notes: z.string().optional(),
 });
 

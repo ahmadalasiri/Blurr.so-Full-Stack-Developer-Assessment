@@ -18,9 +18,6 @@ export interface SalaryRecordInput {
   year: number;
   bonus?: number;
   deductions?: number;
-  allowances?: number;
-  overtimeHours?: number;
-  overtimeRate?: number;
   notes?: string;
 }
 
@@ -68,19 +65,8 @@ export async function createSalaryRecord(data: SalaryRecordInput) {
         success: false,
         error: "Salary record already exists for this month/year",
       };
-    }
-
-    // Calculate salary
-    const calculation = calculateSalary(
-      employee.basicSalary,
-      data.bonus || 0,
-      data.deductions || 0,
-      data.allowances || 0,
-      data.overtimeHours || 0,
-      data.overtimeRate || 0,
-    );
-
-    // Create salary record
+    } // Calculate salary
+    const calculation = calculateSalary(employee.basicSalary, data.bonus || 0, data.deductions || 0); // Create salary record
     const salaryRecord = await prisma.salaryRecord.create({
       data: {
         employeeId: data.employeeId,
@@ -89,9 +75,6 @@ export async function createSalaryRecord(data: SalaryRecordInput) {
         basicSalary: employee.basicSalary,
         bonus: data.bonus || 0,
         deductions: data.deductions || 0,
-        allowances: data.allowances || 0,
-        overtimeHours: data.overtimeHours || 0,
-        overtimeRate: data.overtimeRate || 0,
         totalSalary: calculation.netSalary,
         notes: data.notes,
         status: "DRAFT",
@@ -139,20 +122,12 @@ export async function updateSalaryRecord(id: string, data: Partial<SalaryRecordI
       existingRecord.employee.basicSalary,
       data.bonus ?? existingRecord.bonus,
       data.deductions ?? existingRecord.deductions,
-      data.allowances ?? existingRecord.allowances,
-      data.overtimeHours ?? existingRecord.overtimeHours ?? 0,
-      data.overtimeRate ?? existingRecord.overtimeRate ?? 0,
-    );
-
-    // Update salary record
+    ); // Update salary record
     const updatedRecord = await prisma.salaryRecord.update({
       where: { id },
       data: {
         bonus: data.bonus ?? existingRecord.bonus,
         deductions: data.deductions ?? existingRecord.deductions,
-        allowances: data.allowances ?? existingRecord.allowances,
-        overtimeHours: data.overtimeHours ?? existingRecord.overtimeHours,
-        overtimeRate: data.overtimeRate ?? existingRecord.overtimeRate,
         totalSalary: calculation.netSalary,
         notes: data.notes ?? existingRecord.notes,
       },
@@ -260,9 +235,6 @@ export async function generateMonthlySalaryReport(month: number, year: number) {
             basicSalary: employee.basicSalary,
             bonus: 0,
             deductions: 0,
-            allowances: 0,
-            overtimeHours: 0,
-            overtimeRate: 0,
             totalSalary: employee.basicSalary,
             status: "DRAFT",
           },
@@ -430,25 +402,15 @@ export async function getSalaryRecordsWithFilters(
         },
       },
       orderBy: [{ year: "desc" }, { month: "desc" }],
-    });
-
-    // Calculate computed fields
+    }); // Calculate computed fields
     const recordsWithCalculations = salaryRecords.map((record: any) => {
-      const calculation = calculateSalary(
-        record.basicSalary,
-        record.bonus,
-        record.deductions,
-        record.allowances,
-        record.overtimeHours || 0,
-        record.overtimeRate || 0,
-      );
+      const calculation = calculateSalary(record.basicSalary, record.bonus, record.deductions);
 
       return {
         ...record,
         grossSalary: calculation.grossSalary,
         totalDeductions: calculation.totalDeductions,
         netSalary: calculation.netSalary,
-        overtimePay: calculation.overtimePay,
       };
     });
 

@@ -58,9 +58,6 @@ export function SalaryRecordForm({ salaryRecord, onSuccess, onCancel }: SalaryRe
           year: salaryRecord.year.toString(),
           bonus: salaryRecord.bonus.toString(),
           deductions: salaryRecord.deductions.toString(),
-          allowances: salaryRecord.allowances.toString(),
-          overtimeHours: salaryRecord.overtimeHours.toString(),
-          overtimeRate: salaryRecord.overtimeRate.toString(),
           notes: salaryRecord.notes || "",
         }
       : {
@@ -69,9 +66,6 @@ export function SalaryRecordForm({ salaryRecord, onSuccess, onCancel }: SalaryRe
           year: currentYear.toString(),
           bonus: "0",
           deductions: "0",
-          allowances: "0",
-          overtimeHours: "0",
-          overtimeRate: "0",
           notes: "",
         },
   });
@@ -110,26 +104,18 @@ export function SalaryRecordForm({ salaryRecord, onSuccess, onCancel }: SalaryRe
     };
 
     loadEmployees();
-  }, [isEditing, salaryRecord]); // Watch specific form values for calculation (excluding employeeId to prevent loops)
+  }, [isEditing, salaryRecord]);
+
+  // Watch specific form values for calculation (excluding employeeId to prevent loops)
   const bonus = form.watch("bonus");
   const deductions = form.watch("deductions");
-  const allowances = form.watch("allowances");
-  const overtimeHours = form.watch("overtimeHours");
-  const overtimeRate = form.watch("overtimeRate");
 
   useEffect(() => {
     if (selectedEmployee) {
-      const calc = calculateSalary(
-        selectedEmployee.basicSalary,
-        parseFloat(bonus) || 0,
-        parseFloat(deductions) || 0,
-        parseFloat(allowances) || 0,
-        parseFloat(overtimeHours) || 0,
-        parseFloat(overtimeRate) || 0,
-      );
+      const calc = calculateSalary(selectedEmployee.basicSalary, parseFloat(bonus) || 0, parseFloat(deductions) || 0);
       setCalculation(calc);
     }
-  }, [selectedEmployee, bonus, deductions, allowances, overtimeHours, overtimeRate]);
+  }, [selectedEmployee, bonus, deductions]);
   const handleEmployeeChange = (employeeId: string) => {
     const employee = employees.find((emp) => emp.id === employeeId);
     setSelectedEmployee(employee || null);
@@ -153,9 +139,6 @@ export function SalaryRecordForm({ salaryRecord, onSuccess, onCancel }: SalaryRe
         year: parseInt(data.year),
         bonus: parseFloat(data.bonus) || 0,
         deductions: parseFloat(data.deductions) || 0,
-        allowances: parseFloat(data.allowances) || 0,
-        overtimeHours: parseFloat(data.overtimeHours) || 0,
-        overtimeRate: parseFloat(data.overtimeRate) || 0,
         notes: data.notes || undefined,
       };
 
@@ -325,14 +308,12 @@ export function SalaryRecordForm({ salaryRecord, onSuccess, onCancel }: SalaryRe
             {/* Salary Components */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Salary Components</h3>
-
               {selectedEmployee && (
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <div className="text-sm text-gray-600">Basic Salary</div>
                   <div className="text-lg font-medium">{formatCurrency(selectedEmployee.basicSalary)}</div>
                 </div>
-              )}
-
+              )}{" "}
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -340,26 +321,6 @@ export function SalaryRecordForm({ salaryRecord, onSuccess, onCancel }: SalaryRe
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Bonus</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          placeholder="0.00"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="allowances"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Allowances</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -393,48 +354,6 @@ export function SalaryRecordForm({ salaryRecord, onSuccess, onCancel }: SalaryRe
                     </FormItem>
                   )}
                 />
-
-                <div className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="overtimeHours"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Overtime Hours</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            step="0.5"
-                            min="0"
-                            placeholder="0"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="overtimeRate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Overtime Rate</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            placeholder="0.00"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
               </div>
             </div>
 
@@ -445,8 +364,7 @@ export function SalaryRecordForm({ salaryRecord, onSuccess, onCancel }: SalaryRe
                 <div className="flex items-center gap-2">
                   <Calculator className="h-5 w-5" />
                   <h3 className="text-lg font-medium">Salary Calculation</h3>
-                </div>
-
+                </div>{" "}
                 <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
                   <div className="space-y-2">
                     <div className="flex justify-between">
@@ -456,14 +374,6 @@ export function SalaryRecordForm({ salaryRecord, onSuccess, onCancel }: SalaryRe
                     <div className="flex justify-between">
                       <span className="text-sm text-gray-600">Bonus:</span>
                       <span>{formatCurrency(calculation.bonus)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Allowances:</span>
-                      <span>{formatCurrency(calculation.allowances)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Overtime Pay:</span>
-                      <span>{formatCurrency(calculation.overtimePay)}</span>
                     </div>
                     <div className="flex justify-between font-medium">
                       <span>Gross Salary:</span>
