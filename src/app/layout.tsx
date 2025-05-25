@@ -4,8 +4,8 @@ import { Navigation } from "@/components/navigation";
 import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
-  title: "Next.js Auth App",
-  description: "A Next.js application with authentication",
+  title: "Blurr HR Portal",
+  description: "HR Portal for managing employees, projects, and tasks",
 };
 
 export default function RootLayout({
@@ -14,8 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
+    <html
+      lang="en"
+      suppressHydrationWarning
+    >
+      <body suppressHydrationWarning>
         <Providers>
           <Navigation />
           <main>{children}</main>

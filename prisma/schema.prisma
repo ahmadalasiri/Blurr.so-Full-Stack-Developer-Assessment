@@ -24,14 +24,14 @@ model User {
   role          UserRole  @default(USER)
   accounts      Account[]
   sessions      Session[]
-  
+
   // HR Portal Relations
-  employees     Employee[]
-  projects      Project[]
-  createdTasks  Task[]     @relation("TaskCreator")
-  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  employees    Employee[]
+  projects     Project[]
+  createdTasks Task[]     @relation("TaskCreator")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("users")
 }
@@ -80,24 +80,24 @@ model VerificationToken {
 // =====================================================
 
 model Employee {
-  id           String   @id @default(cuid())
-  employeeId   String   @unique // Custom employee ID (e.g., EMP001)
-  name         String
-  email        String?  @unique
-  joiningDate  DateTime
-  basicSalary  Float    // Stored as Float for SQLite compatibility
-  department   String?
-  position     String?
-  isActive     Boolean  @default(true)
-  
+  id          String   @id @default(cuid())
+  employeeId  String   @unique // Custom employee ID (e.g., EMP001)
+  name        String
+  email       String?  @unique
+  joiningDate DateTime
+  basicSalary Float // Stored as Float for SQLite compatibility
+  department  String?
+  position    String?
+  isActive    Boolean  @default(true)
+
   // Relations
-  userId       String
-  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  assignedTasks Task[]        @relation("TaskAssignee")
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignedTasks Task[]         @relation("TaskAssignee")
   salaryRecords SalaryRecord[]
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([employeeId])
@@ -106,21 +106,21 @@ model Employee {
 }
 
 model Project {
-  id          String      @id @default(cuid())
+  id          String        @id @default(cuid())
   title       String
   description String?
   status      ProjectStatus @default(PLANNING)
   startDate   DateTime?
   endDate     DateTime?
-  budget      Float?      // Stored as Float for SQLite compatibility
-  
+  budget      Float? // Stored as Float for SQLite compatibility
+
   // Relations
-  userId      String
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tasks       Task[]
-  
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks  Task[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([status])
@@ -128,31 +128,31 @@ model Project {
 }
 
 model Task {
-  id          String     @id @default(cuid())
-  title       String
-  description String?
-  priority    Priority   @default(MEDIUM)
-  status      TaskStatus @default(TODO)
+  id             String     @id @default(cuid())
+  title          String
+  description    String?
+  priority       Priority   @default(MEDIUM)
+  status         TaskStatus @default(TODO)
   estimatedHours Int?
   actualHours    Int?
-  dueDate     DateTime?
-  
+  dueDate        DateTime?
+
   // Relations
-  projectId   String
-  project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  
-  assigneeId  String?
-  assignee    Employee?  @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
-  
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  assigneeId String?
+  assignee   Employee? @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+
   createdById String
-  createdBy   User       @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Cascade)
-  
+  createdBy   User   @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Cascade)
+
   // Task Dependencies (future enhancement)
-  dependencies Task[]    @relation("TaskDependencies")
-  dependentOn  Task[]    @relation("TaskDependencies")
-  
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  dependencies Task[] @relation("TaskDependencies")
+  dependentOn  Task[] @relation("TaskDependencies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([projectId])
   @@index([assigneeId])
@@ -163,33 +163,33 @@ model Task {
 }
 
 model SalaryRecord {
-  id          String   @id @default(cuid())
-  
+  id String @id @default(cuid())
+
   // Time period
-  month       Int      // 1-12
+  month       Int // 1-12
   year        Int
-    // Salary components
-  basicSalary Float    // Stored as Float for SQLite compatibility
-  bonus       Float    @default(0)
-  deductions  Float    @default(0)
-  totalSalary Float    // Calculated field
-  
+  // Salary components
+  basicSalary Float // Stored as Float for SQLite compatibility
+  bonus       Float @default(0)
+  deductions  Float @default(0)
+  totalSalary Float // Calculated field
+
   // Additional fields
   overtimeHours Int?   @default(0)
   overtimeRate  Float? @default(0)
   allowances    Float  @default(0)
-  
+
   // Status and notes
   status      SalaryStatus @default(DRAFT)
   notes       String?
   processedAt DateTime?
-  
+
   // Relations
-  employeeId  String
-  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([employeeId, month, year])
   @@index([employeeId])
@@ -203,17 +203,17 @@ model SalaryRecord {
 // =====================================================
 
 model AuditLog {
-  id        String   @id @default(cuid())
-  action    String   // CREATE, UPDATE, DELETE
-  entityType String  // Employee, Project, Task, etc.
-  entityId  String
-  oldValues Json?
-  newValues Json?
-  userId    String
-  userEmail String
-  ipAddress String?
-  userAgent String?
-  
+  id         String  @id @default(cuid())
+  action     String // CREATE, UPDATE, DELETE
+  entityType String // Employee, Project, Task, etc.
+  entityId   String
+  oldValues  Json?
+  newValues  Json?
+  userId     String
+  userEmail  String
+  ipAddress  String?
+  userAgent  String?
+
   createdAt DateTime @default(now())
 
   @@index([entityType, entityId])
