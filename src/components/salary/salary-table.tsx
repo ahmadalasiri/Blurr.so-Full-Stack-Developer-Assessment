@@ -218,12 +218,12 @@ export function SalaryTable({ onEdit, onView, onDelete, onAdd }: SalaryTableProp
                           <div className="text-xs text-gray-400">{record.employee.department}</div>
                         )}
                       </div>
-                    </TableCell>
+                    </TableCell>{" "}
                     <TableCell>{formatMonthYear(record.month, record.year)}</TableCell>
                     <TableCell>{formatCurrency(record.basicSalary)}</TableCell>
                     <TableCell>{formatCurrency(record.bonus)}</TableCell>
                     <TableCell>{formatCurrency(record.deductions)}</TableCell>
-                    <TableCell className="font-medium">{formatCurrency(record.netSalary)}</TableCell>
+                    <TableCell className="font-medium">{formatCurrency(record.netSalary || 0)}</TableCell>
                     <TableCell>{getStatusBadge(record.status)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
