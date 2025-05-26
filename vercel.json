@@ -1,7 +1,7 @@
 {
   "functions": {
     "src/app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
+      "runtime": "nodejs20.x"
     }
   },
   "env": {
@@ -12,8 +12,8 @@
       "PRISMA_GENERATE_DATAPROXY": "true"
     }
   },
-  "installCommand": "npm install",
-  "buildCommand": "prisma generate && npm run build",
+  "installCommand": "npm install && prisma generate",
+  "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "framework": "nextjs"
 }
