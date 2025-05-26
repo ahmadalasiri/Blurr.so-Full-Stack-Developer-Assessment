@@ -122,8 +122,6 @@ The application is deployed on a Contabo VPS with:
 - SSL certificate for HTTPS
 - Automated builds and deployments
 
-See `DEPLOYMENT.md` for detailed deployment instructions.
-
 ### Development Workflow:
 
 1. Start with architecture and planning prompts
@@ -132,14 +130,6 @@ See `DEPLOYMENT.md` for detailed deployment instructions.
 4. Add advanced features (Kanban, AI chatbot)
 5. Optimize and polish for production
 6. Prepare for deployment and demo
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🤝 Contributing
-
-This is a technical assessment project. For questions or feedback, please contact the development team.
 
 ---
 
