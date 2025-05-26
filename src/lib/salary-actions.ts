@@ -169,10 +169,14 @@ export async function getSalaryRecords(filters: SalaryReportFilters = {}) {
             contains: filters.department,
           },
         }),
+        ...(filters.employeeId && {
+          employeeId: {
+            contains: filters.employeeId,
+          },
+        }),
       },
       ...(filters.month && { month: filters.month }),
       ...(filters.year && { year: filters.year }),
-      ...(filters.employeeId && { employeeId: filters.employeeId }),
       ...(filters.status && { status: filters.status }),
     };
 
@@ -381,10 +385,14 @@ export async function getSalaryRecordsWithFilters(
             contains: filters.department,
           },
         }),
+        ...(filters.employeeId && {
+          employeeId: {
+            contains: filters.employeeId,
+          },
+        }),
       },
       ...(filters.month && { month: filters.month }),
       ...(filters.year && { year: filters.year }),
-      ...(filters.employeeId && { employeeId: filters.employeeId }),
       ...(filters.status && { status: filters.status }),
     };
 
