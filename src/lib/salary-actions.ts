@@ -167,7 +167,6 @@ export async function getSalaryRecords(filters: SalaryReportFilters = {}) {
         ...(filters.department && {
           department: {
             contains: filters.department,
-            mode: "insensitive" as const,
           },
         }),
       },
@@ -380,7 +379,6 @@ export async function getSalaryRecordsWithFilters(
         ...(filters.department && {
           department: {
             contains: filters.department,
-            mode: "insensitive" as const,
           },
         }),
       },
