@@ -1,18 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
-import {
-  ArrowLeft,
-  Edit,
-  Mail,
-  Calendar,
-  DollarSign,
-  Building,
-  Briefcase,
-  Users,
-  FileText,
-  TrendingUp,
-} from "lucide-react";
+import { ArrowLeft, Edit, Mail, Calendar, DollarSign, Building, Briefcase, FileText, TrendingUp } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

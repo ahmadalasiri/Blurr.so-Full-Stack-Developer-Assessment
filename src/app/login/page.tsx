@@ -41,12 +41,10 @@ function LoginForm() {
       router.push(callbackUrl);
     }
   }, [session, status, router, callbackUrl]);
-
   // Don't render the login form for authenticated users
   if (status === "authenticated") {
     return null;
   }
-
   const onSubmit = async (data: LoginInput) => {
     setIsLoading(true);
 
@@ -72,9 +70,11 @@ function LoginForm() {
         return;
       }
 
-      // Successful login - redirect
-      router.push(callbackUrl);
-      router.refresh();
+      // Successful login - force redirect using window.location
+      console.log("Login successful, redirecting to:", callbackUrl);
+
+      // Force a full page reload to ensure proper authentication state
+      window.location.replace(callbackUrl);
     } catch (error) {
       console.error("Login error:", error);
       setError("root", { message: "Something went wrong. Please try again." });

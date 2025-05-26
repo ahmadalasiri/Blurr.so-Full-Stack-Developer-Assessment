@@ -108,11 +108,25 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
     },
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
+      console.log("Redirect callback:", { url, baseUrl });
+
+      // Always redirect to dashboard after successful login
+      if (url === baseUrl || url === `${baseUrl}/`) {
+        return `${baseUrl}/dashboard`;
+      }
+
+      // Handle relative callback URLs
+      if (url.startsWith("/")) {
+        return `${baseUrl}${url}`;
+      }
+
+      // Handle callback URLs on the same origin
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+
+      // Default redirect to dashboard
+      return `${baseUrl}/dashboard`;
     },
   },
   pages: {
@@ -126,7 +140,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   events: {
     async signIn({ user }) {
       // Log successful sign-ins
-      console.log(`User ${user.email} signed in`);
+      console.log(`User ${user.email} signed in successfully`);
     },
   },
   debug: process.env.NODE_ENV === "development",
