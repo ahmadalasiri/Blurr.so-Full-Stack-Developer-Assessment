@@ -32,9 +32,9 @@ function SidebarNavItem({ href, icon, title }: SidebarNavItemProps) {
   );
 }
 
-export function DashboardSidebar() {
+export function DashboardSidebar({ isMobile = false }: { isMobile?: boolean }) {
   return (
-    <div className="hidden w-64 border-r bg-background lg:block">
+    <div className={cn("w-64 border-r bg-background", isMobile ? "block" : "hidden lg:block")}>
       <div className="flex h-full max-h-screen flex-col">
         <ScrollArea className="flex-1">
           <div className="flex flex-col gap-2 p-4">

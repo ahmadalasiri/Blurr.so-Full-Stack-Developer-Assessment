@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { DashboardSidebar } from "./sidebar";
 
@@ -10,7 +10,10 @@ export function MobileSidebar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet
+      open={open}
+      onOpenChange={setOpen}
+    >
       <SheetTrigger asChild>
         <Button
           variant="outline"
@@ -20,12 +23,16 @@ export function MobileSidebar() {
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle Menu</span>
         </Button>
-      </SheetTrigger>
-      <SheetContent side="left" className="p-0 w-[300px]">
+      </SheetTrigger>{" "}
+      <SheetContent
+        side="left"
+        className="p-0 w-[300px]"
+      >
+        <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
         <div className="h-full flex">
-          <DashboardSidebar />
+          <DashboardSidebar isMobile={true} />
         </div>
       </SheetContent>
     </Sheet>
   );
-} 
+}
