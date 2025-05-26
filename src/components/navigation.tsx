@@ -9,6 +9,8 @@ export function Navigation() {
   const pathname = usePathname();
   const { data: session } = useSession();
 
+  const handleSignOut = () => signOut({ callbackUrl: "/" });
+
   return (
     <header className="border-b mx-4">
       <div className="container flex h-16 items-center justify-between py-4">
@@ -38,6 +40,7 @@ export function Navigation() {
             </Link>
           </nav>
         </div>
+
         <div className="flex items-center gap-2">
           {!session && pathname !== "/login" && pathname !== "/register" && (
             <div className="flex gap-2">
@@ -58,9 +61,7 @@ export function Navigation() {
               <span className="text-sm mr-2">{session.user.name || session.user.email}</span>
               <Button
                 variant="outline"
-                onClick={() => {
-                  signOut({ callbackUrl: "/" });
-                }}
+                onClick={handleSignOut}
               >
                 Sign Out
               </Button>
