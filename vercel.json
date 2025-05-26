@@ -7,8 +7,6 @@
       "PRISMA_GENERATE_DATAPROXY": "true"
     }
   },
-  "installCommand": "npm install && prisma generate",
   "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
   "framework": "nextjs"
 }
