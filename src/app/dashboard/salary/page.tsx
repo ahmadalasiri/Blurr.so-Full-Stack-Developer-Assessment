@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SalaryTable } from "@/components/salary/salary-table";
 import { SalaryRecordForm } from "@/components/salary/salary-form";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CalendarDays, DollarSign, TrendingUp, Users } from "lucide-react";
 import { toast } from "sonner";
-import { deleteSalaryRecord, type SalaryRecordWithEmployee } from "@/lib/salary-actions";
+import {
+  deleteSalaryRecord,
+  getSalaryDashboardStats,
+  type SalaryRecordWithEmployee,
+  type SalaryDashboardStats,
+} from "@/lib/salary-actions";
 import { formatCurrency } from "@/lib/utils";
 
 export default function SalaryDashboard() {
@@ -28,6 +33,31 @@ export default function SalaryDashboard() {
   const [viewingRecord, setViewingRecord] = useState<SalaryRecordWithEmployee | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [stats, setStats] = useState<SalaryDashboardStats>({
+    totalRecords: 0,
+    totalPayroll: 0,
+    pendingApprovals: 0,
+    activeEmployees: 0,
+  });
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  // Load dashboard statistics
+  const loadStats = async () => {
+    setStatsLoading(true);
+    try {
+      const dashboardStats = await getSalaryDashboardStats();
+      setStats(dashboardStats);
+    } catch (error) {
+      console.error("Failed to load dashboard stats:", error);
+      toast.error("Failed to load dashboard statistics");
+    } finally {
+      setStatsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadStats();
+  }, [refreshKey]); // Reload stats when data changes
 
   const handleAdd = () => {
     setEditingRecord(null);
@@ -121,8 +151,7 @@ export default function SalaryDashboard() {
           <h1 className="text-3xl font-bold">Salary Management</h1>
           <p className="text-gray-600">Manage employee salary records and calculations</p>
         </div>
-      </div>
-
+      </div>{" "}
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
@@ -131,7 +160,7 @@ export default function SalaryDashboard() {
             <CalendarDays className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">--</div>
+            <div className="text-2xl font-bold">{statsLoading ? "..." : stats.totalRecords}</div>
             <p className="text-xs text-muted-foreground">This month</p>
           </CardContent>
         </Card>
@@ -142,7 +171,7 @@ export default function SalaryDashboard() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">--</div>
+            <div className="text-2xl font-bold">{statsLoading ? "..." : formatCurrency(stats.totalPayroll)}</div>
             <p className="text-xs text-muted-foreground">This month</p>
           </CardContent>
         </Card>
@@ -153,7 +182,7 @@ export default function SalaryDashboard() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">--</div>
+            <div className="text-2xl font-bold">{statsLoading ? "..." : stats.pendingApprovals}</div>
             <p className="text-xs text-muted-foreground">Awaiting approval</p>
           </CardContent>
         </Card>
@@ -164,12 +193,11 @@ export default function SalaryDashboard() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">--</div>
+            <div className="text-2xl font-bold">{statsLoading ? "..." : stats.activeEmployees}</div>
             <p className="text-xs text-muted-foreground">With salary records</p>
           </CardContent>
         </Card>
       </div>
-
       {/* Salary Table */}
       <SalaryTable
         key={refreshKey}
@@ -178,7 +206,6 @@ export default function SalaryDashboard() {
         onView={handleView}
         onDelete={handleDelete}
       />
-
       {/* Form Dialog */}
       <Dialog
         open={showForm}
@@ -195,7 +222,6 @@ export default function SalaryDashboard() {
           />
         </DialogContent>
       </Dialog>
-
       {/* View Dialog */}
       <Dialog
         open={!!viewingRecord}
@@ -242,6 +268,7 @@ export default function SalaryDashboard() {
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">Salary Breakdown</h3>{" "}
                 <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                  {" "}
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm text-gray-600">Basic Salary:</span>
@@ -253,10 +280,9 @@ export default function SalaryDashboard() {
                     </div>
                     <div className="flex justify-between font-medium">
                       <span>Gross Salary:</span>
-                      <span>{formatCurrency(viewingRecord.grossSalary)}</span>
+                      <span>{formatCurrency(viewingRecord.grossSalary || 0)}</span>
                     </div>
                   </div>
-
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm text-gray-600">Deductions:</span>
@@ -264,12 +290,12 @@ export default function SalaryDashboard() {
                     </div>
                     <div className="flex justify-between font-medium">
                       <span>Total Deductions:</span>
-                      <span>{formatCurrency(viewingRecord.totalDeductions)}</span>
+                      <span>{formatCurrency(viewingRecord.totalDeductions || 0)}</span>
                     </div>
                     <div className="border-t pt-2 mt-2">
                       <div className="flex justify-between text-lg font-bold">
                         <span>Net Salary:</span>
-                        <span className="text-green-600">{formatCurrency(viewingRecord.netSalary)}</span>
+                        <span className="text-green-600">{formatCurrency(viewingRecord.netSalary || 0)}</span>
                       </div>
                     </div>
                   </div>
@@ -290,7 +316,6 @@ export default function SalaryDashboard() {
           )}
         </DialogContent>
       </Dialog>
-
       {/* Delete Confirmation Dialog */}
       <AlertDialog
         open={!!deletingId}
