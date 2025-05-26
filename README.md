@@ -2,6 +2,10 @@
 
 A comprehensive HR management application built with Next.js, featuring employee management, project tracking, task management, and salary processing.
 
+## 🎥 Demo Video
+
+https://github.com/user-attachments/assets/708a842c-1994-4f63-820f-28ece27b0810
+
 ## 🚀 Live Demo
 
 **Deployed Application:** [https://blurr.ahmadalasiri.info/](https://blurr.ahmadalasiri.info/)
