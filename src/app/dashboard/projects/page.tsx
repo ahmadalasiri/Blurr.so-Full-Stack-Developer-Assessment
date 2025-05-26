@@ -6,6 +6,9 @@ import { PlusCircle } from "lucide-react";
 import { getProjects, getProjectStats } from "@/lib/project-actions";
 import Link from "next/link";
 
+// Force dynamic rendering to prevent static generation
+export const dynamic = "force-dynamic";
+
 export default async function ProjectsPage() {
   const [projects, statsResult] = await Promise.all([getProjects(), getProjectStats()]);
 

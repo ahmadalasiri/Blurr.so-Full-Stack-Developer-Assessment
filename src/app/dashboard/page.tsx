@@ -18,6 +18,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+// Force dynamic rendering to prevent static generation
+export const dynamic = "force-dynamic";
+
 interface DashboardStats {
   projectStats: {
     totalProjects: number;
