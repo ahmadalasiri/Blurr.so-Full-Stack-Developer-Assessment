@@ -1,7 +1,8 @@
 {
   "name": "tech-assessment",
   "version": "0.1.0",
-  "private": true,  "scripts": {
+  "private": true,
+  "scripts": {
     "dev": "next dev --turbopack",
     "build": "npx prisma generate && next build",
     "start": "next start",

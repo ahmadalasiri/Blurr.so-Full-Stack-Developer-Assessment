@@ -110,6 +110,7 @@ model Project {
   title       String
   description String?
   status      ProjectStatus @default(PLANNING)
+  priority    Priority      @default(MEDIUM)
   startDate   DateTime?
   endDate     DateTime?
   budget      Float? // Stored as Float for SQLite compatibility
