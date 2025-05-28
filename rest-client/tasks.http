@@ -1,0 +1,266 @@
+# Tasks API Tests
+# REST Client file for testing task management endpoints
+# Note: These are simulated REST endpoints - the actual app uses Server Actions
+
+### Variables
+@baseUrl = http://localhost:3000
+@contentType = application/json
+@userEmail = john.doe@example.com
+@projectId = project_01
+@taskId = task_01
+@assigneeId = emp_01
+
+### Get All Tasks
+GET {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Tasks with Filtering
+GET {{baseUrl}}/api/tasks?status=IN_PROGRESS&priority=HIGH&assigneeId={{assigneeId}}&projectId={{projectId}}
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Tasks by Project
+GET {{baseUrl}}/api/projects/{{projectId}}/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Task by ID
+GET {{baseUrl}}/api/tasks/{{taskId}}
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Create New Task
+POST {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Implement User Authentication",
+  "description": "Create secure user authentication system with JWT tokens and session management",
+  "status": "TODO",
+  "priority": "HIGH",
+  "projectId": "{{projectId}}",
+  "assigneeId": "{{assigneeId}}",
+  "dueDate": "2025-02-15T00:00:00.000Z",
+  "estimatedHours": 24,
+  "tags": ["authentication", "security", "backend"]
+}
+
+### Create Subtask
+POST {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Setup JWT Library",
+  "description": "Install and configure JWT library for token generation",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "projectId": "{{projectId}}",
+  "assigneeId": "{{assigneeId}}",
+  "parentTaskId": "{{taskId}}",
+  "dueDate": "2025-02-10T00:00:00.000Z",
+  "estimatedHours": 4,
+  "tags": ["jwt", "setup"]
+}
+
+### Update Task
+PUT {{baseUrl}}/api/tasks/{{taskId}}
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Implement User Authentication - Updated",
+  "description": "Enhanced user authentication with 2FA support",
+  "status": "IN_PROGRESS",
+  "priority": "CRITICAL",
+  "estimatedHours": 32,
+  "actualHours": 8,
+  "tags": ["authentication", "security", "backend", "2fa"]
+}
+
+### Update Task Status
+PATCH {{baseUrl}}/api/tasks/{{taskId}}/status
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "status": "COMPLETED"
+}
+
+### Assign Task
+PATCH {{baseUrl}}/api/tasks/{{taskId}}/assign
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "assigneeId": "emp_02"
+}
+
+### Log Time Entry
+POST {{baseUrl}}/api/tasks/{{taskId}}/time-entries
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "hours": 4,
+  "description": "Implemented JWT token generation and validation",
+  "date": "2025-01-15T00:00:00.000Z"
+}
+
+### Get Task Time Entries
+GET {{baseUrl}}/api/tasks/{{taskId}}/time-entries
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Update Time Entry
+PUT {{baseUrl}}/api/tasks/{{taskId}}/time-entries/entry_01
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "hours": 5,
+  "description": "Implemented and tested JWT token generation and validation"
+}
+
+### Delete Time Entry
+DELETE {{baseUrl}}/api/tasks/{{taskId}}/time-entries/entry_01
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Add Task Comment
+POST {{baseUrl}}/api/tasks/{{taskId}}/comments
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "content": "Authentication implementation is progressing well. JWT integration completed.",
+  "authorId": "{{assigneeId}}"
+}
+
+### Get Task Comments
+GET {{baseUrl}}/api/tasks/{{taskId}}/comments
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Upload Task Attachment
+POST {{baseUrl}}/api/tasks/{{taskId}}/attachments
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data
+
+# Note: This would be a file upload in real scenario
+
+### Get Task Dependencies
+GET {{baseUrl}}/api/tasks/{{taskId}}/dependencies
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Add Task Dependency
+POST {{baseUrl}}/api/tasks/{{taskId}}/dependencies
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "dependsOnTaskId": "task_02",
+  "type": "FINISH_TO_START"
+}
+
+### Get Task Statistics
+GET {{baseUrl}}/api/tasks/statistics
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get My Tasks
+GET {{baseUrl}}/api/tasks/my-tasks
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Overdue Tasks
+GET {{baseUrl}}/api/tasks/overdue
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Bulk Update Tasks
+PATCH {{baseUrl}}/api/tasks/bulk
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "taskIds": ["task_01", "task_02", "task_03"],
+  "updates": {
+    "status": "ON_HOLD"
+  }
+}
+
+### Delete Task
+DELETE {{baseUrl}}/api/tasks/{{taskId}}
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Error Cases
+
+### Create Task - Missing Required Fields
+POST {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "description": "Task without title"
+}
+
+### Create Task - Invalid Priority
+POST {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Invalid Priority Task",
+  "priority": "INVALID_PRIORITY",
+  "projectId": "{{projectId}}"
+}
+
+### Update Non-Existent Task
+PUT {{baseUrl}}/api/tasks/non_existent_task
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Non-existent Task"
+}
+
+### Assign Task to Non-Existent User
+PATCH {{baseUrl}}/api/tasks/{{taskId}}/assign
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "assigneeId": "non_existent_user"
+}
+
+### Log Negative Hours
+POST {{baseUrl}}/api/tasks/{{taskId}}/time-entries
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "hours": -2,
+  "description": "Invalid negative hours"
+}
+
+### Unauthorized Access
+GET {{baseUrl}}/api/tasks
+Content-Type: {{contentType}}
+
+# Server Action Equivalents:
+# These endpoints would be handled by Server Actions in the actual app:
+# 
+# getAllTasks() - from @/lib/task-actions
+# getTaskById(id) - from @/lib/task-actions
+# createTask(data) - from @/lib/task-actions
+# updateTask(id, data) - from @/lib/task-actions
+# deleteTask(id) - from @/lib/task-actions
+# assignTask(taskId, assigneeId) - from @/lib/task-actions
+# logTimeEntry(taskId, entry) - from @/lib/task-actions
+# getTaskStatistics() - from @/lib/task-actions
+# getTasksByProject(projectId) - from @/lib/task-actions

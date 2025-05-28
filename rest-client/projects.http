@@ -1,0 +1,153 @@
+# Projects API Tests
+# REST Client file for testing project management endpoints
+# Note: These are simulated REST endpoints - the actual app uses Server Actions
+
+### Variables
+@baseUrl = http://localhost:3000
+@contentType = application/json
+@userEmail = john.doe@example.com
+@managerId = user_01
+@projectId = project_01
+
+### Get All Projects
+GET {{baseUrl}}/api/projects
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Projects with Filtering
+GET {{baseUrl}}/api/projects?status=IN_PROGRESS&managerId={{managerId}}&search=Website
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Project by ID
+GET {{baseUrl}}/api/projects/{{projectId}}
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Create New Project
+POST {{baseUrl}}/api/projects
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "name": "E-commerce Platform Redesign",
+  "description": "Complete redesign of the e-commerce platform with modern UI/UX",
+  "startDate": "2025-06-01T00:00:00.000Z",
+  "endDate": "2025-12-31T00:00:00.000Z",
+  "budget": 150000,
+  "status": "PLANNING",
+  "priority": "HIGH",
+  "managerId": "{{managerId}}",
+  "employeeIds": ["emp_01", "emp_02", "emp_03"],
+  "tags": ["web", "redesign", "ecommerce"]
+}
+
+### Update Project
+PUT {{baseUrl}}/api/projects/{{projectId}}
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "name": "E-commerce Platform Redesign - Updated",
+  "description": "Complete redesign with enhanced mobile responsiveness",
+  "status": "IN_PROGRESS",
+  "priority": "CRITICAL",
+  "budget": 175000,
+  "employeeIds": ["emp_01", "emp_02", "emp_03", "emp_04"]
+}
+
+### Update Project Status
+PATCH {{baseUrl}}/api/projects/{{projectId}}/status
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "status": "COMPLETED"
+}
+
+### Assign Employees to Project
+POST {{baseUrl}}/api/projects/{{projectId}}/employees
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "employeeIds": ["emp_05", "emp_06"]
+}
+
+### Remove Employee from Project
+DELETE {{baseUrl}}/api/projects/{{projectId}}/employees/emp_02
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Project Statistics
+GET {{baseUrl}}/api/projects/statistics
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Project Tasks
+GET {{baseUrl}}/api/projects/{{projectId}}/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Delete Project
+DELETE {{baseUrl}}/api/projects/{{projectId}}
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Bulk Update Projects
+PATCH {{baseUrl}}/api/projects/bulk
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "projectIds": ["project_01", "project_02"],
+  "updates": {
+    "status": "ON_HOLD"
+  }
+}
+
+### Error Cases
+
+### Create Project - Missing Required Fields
+POST {{baseUrl}}/api/projects
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "description": "Project without name"
+}
+
+### Create Project - Invalid Date Range
+POST {{baseUrl}}/api/projects
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Invalid Date Project",
+  "startDate": "2025-12-31T00:00:00.000Z",
+  "endDate": "2025-01-01T00:00:00.000Z"
+}
+
+### Update Non-Existent Project
+PUT {{baseUrl}}/api/projects/non_existent_id
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Non-existent Project"
+}
+
+### Unauthorized Access
+GET {{baseUrl}}/api/projects
+Content-Type: {{contentType}}
+
+# Server Action Equivalents:
+# These endpoints would be handled by Server Actions in the actual app:
+# 
+# getAllProjects() - from @/lib/project-actions
+# getProjectById(id) - from @/lib/project-actions  
+# createProject(data) - from @/lib/project-actions
+# updateProject(id, data) - from @/lib/project-actions
+# deleteProject(id) - from @/lib/project-actions
+# assignEmployeesToProject(projectId, employeeIds) - from @/lib/project-actions
+# getProjectStatistics() - from @/lib/project-actions

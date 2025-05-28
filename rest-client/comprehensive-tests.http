@@ -1,0 +1,270 @@
+### Comprehensive API Testing Guide
+### Base URL and Variables
+@baseUrl = http://localhost:3001
+@contentType = application/json
+
+### Test Variables (Update these as needed)
+@testEmployeeId = EMP001
+@testEmployeeName = John Doe
+@testEmployeeEmail = john.doe@company.com
+@testProjectId = project-id-here
+@testTaskId = task-id-here
+@testSalaryId = salary-id-here
+
+###############################################
+### AUTHENTICATION FLOW
+###############################################
+
+### 1. Register a new user (prerequisite)
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "name": "Test Admin",
+  "email": "admin@test.com",
+  "password": "password123"
+}
+
+###
+
+### 2. Login to get session (prerequisite for other API calls)
+POST {{baseUrl}}/api/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@test.com",
+  "password": "password123"
+}
+
+###############################################
+### EMPLOYEE MANAGEMENT
+###############################################
+
+### 3. Create a new employee
+POST {{baseUrl}}/api/employees
+Content-Type: {{contentType}}
+
+{
+  "employeeId": "{{testEmployeeId}}",
+  "name": "{{testEmployeeName}}",
+  "email": "{{testEmployeeEmail}}",
+  "joiningDate": "2024-01-15",
+  "basicSalary": 75000,
+  "department": "Engineering",
+  "position": "Software Engineer",
+  "isActive": true
+}
+
+###
+
+### 4. Get all employees
+GET {{baseUrl}}/api/employees?page=1&limit=10&sortBy=name&sortOrder=asc
+
+###
+
+### 5. Get all employees with filters
+GET {{baseUrl}}/api/employees?page=1&limit=10&search=John&department=Engineering&isActive=true
+
+###
+
+### 6. Get employee by ID (replace with actual employee ID)
+GET {{baseUrl}}/api/employees/employee-id-here
+
+###
+
+### 7. Update employee (replace with actual employee ID)
+PUT {{baseUrl}}/api/employees/employee-id-here
+Content-Type: {{contentType}}
+
+{
+  "name": "John Doe Updated",
+  "department": "Senior Engineering",
+  "basicSalary": 85000
+}
+
+###
+
+### 8. Delete employee (replace with actual employee ID)
+DELETE {{baseUrl}}/api/employees/employee-id-here
+
+###############################################
+### PROJECT MANAGEMENT
+###############################################
+
+### 9. Create a new project
+POST {{baseUrl}}/api/projects
+Content-Type: {{contentType}}
+
+{
+  "name": "Test Project",
+  "description": "A test project for API testing",
+  "status": "PLANNING",
+  "startDate": "2024-01-20",
+  "endDate": "2024-06-20"
+}
+
+###
+
+### 10. Get all projects
+GET {{baseUrl}}/api/projects?page=1&limit=10
+
+###
+
+### 11. Get projects with filters
+GET {{baseUrl}}/api/projects?page=1&limit=10&status=PLANNING&search=Test
+
+###
+
+### 12. Get project by ID (replace with actual project ID)
+GET {{baseUrl}}/api/projects/project-id-here
+
+###
+
+### 13. Update project (replace with actual project ID)
+PUT {{baseUrl}}/api/projects/project-id-here
+Content-Type: {{contentType}}
+
+{
+  "name": "Updated Test Project",
+  "status": "IN_PROGRESS",
+  "description": "Updated project description"
+}
+
+###
+
+### 14. Delete project (replace with actual project ID)
+DELETE {{baseUrl}}/api/projects/project-id-here
+
+###############################################
+### TASK MANAGEMENT
+###############################################
+
+### 15. Create a new task (requires valid projectId)
+POST {{baseUrl}}/api/tasks
+Content-Type: {{contentType}}
+
+{
+  "title": "Test Task",
+  "description": "A test task for API testing",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "projectId": "{{testProjectId}}",
+  "dueDate": "2024-02-15"
+}
+
+###
+
+### 16. Get all tasks
+GET {{baseUrl}}/api/tasks?page=1&limit=10
+
+###
+
+### 17. Get tasks with filters
+GET {{baseUrl}}/api/tasks?page=1&limit=10&status=TODO&priority=MEDIUM&search=Test
+
+###
+
+### 18. Get task by ID (replace with actual task ID)
+GET {{baseUrl}}/api/tasks/task-id-here
+
+###
+
+### 19. Update task (replace with actual task ID)
+PUT {{baseUrl}}/api/tasks/task-id-here
+Content-Type: {{contentType}}
+
+{
+  "title": "Updated Test Task",
+  "status": "IN_PROGRESS",
+  "priority": "HIGH"
+}
+
+###
+
+### 20. Delete task (replace with actual task ID)
+DELETE {{baseUrl}}/api/tasks/task-id-here
+
+###############################################
+### SALARY MANAGEMENT
+###############################################
+
+### 21. Create a new salary record (requires valid employeeId)
+POST {{baseUrl}}/api/salary
+Content-Type: {{contentType}}
+
+{
+  "employeeId": "employee-id-here",
+  "basicSalary": 75000,
+  "allowances": 5000,
+  "deductions": 2000,
+  "effectiveDate": "2024-01-01"
+}
+
+###
+
+### 22. Get all salary records
+GET {{baseUrl}}/api/salary?page=1&limit=10
+
+###
+
+### 23. Get salary records with filters
+GET {{baseUrl}}/api/salary?page=1&limit=10&employeeId=employee-id-here&fromDate=2024-01-01
+
+###
+
+### 24. Get salary record by ID (replace with actual salary ID)
+GET {{baseUrl}}/api/salary/salary-id-here
+
+###
+
+### 25. Update salary record (replace with actual salary ID)
+PUT {{baseUrl}}/api/salary/salary-id-here
+Content-Type: {{contentType}}
+
+{
+  "basicSalary": 80000,
+  "allowances": 6000,
+  "deductions": 2500
+}
+
+###
+
+### 26. Delete salary record (replace with actual salary ID)
+DELETE {{baseUrl}}/api/salary/salary-id-here
+
+###############################################
+### CHATBOT API
+###############################################
+
+### 27. Send message to chatbot
+POST {{baseUrl}}/api/chatbot
+Content-Type: {{contentType}}
+
+{
+  "message": "Hello, can you help me with employee management?"
+}
+
+###############################################
+### ERROR TESTING
+###############################################
+
+### 28. Test unauthorized access (without authentication)
+GET {{baseUrl}}/api/employees
+
+###
+
+### 29. Test validation error
+POST {{baseUrl}}/api/employees
+Content-Type: {{contentType}}
+
+{
+  "name": "",
+  "email": "invalid-email"
+}
+
+###
+
+### 30. Test not found error
+GET {{baseUrl}}/api/employees/non-existent-id
+
+###

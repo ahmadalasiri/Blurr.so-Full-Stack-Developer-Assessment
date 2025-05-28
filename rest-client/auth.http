@@ -1,0 +1,78 @@
+### Authentication API Endpoints
+### Base URL
+@baseUrl = http://localhost:3001
+@contentType = application/json
+
+### Variables for testing
+@userEmail = john.doe@example.com
+@userPassword = password123
+@newUserName = Jane Smith
+@newUserEmail = jane.smith@example.com
+@newUserPassword = securePassword456
+
+###############################################
+### 1. Register a new user
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "name": "{{newUserName}}",
+  "email": "{{newUserEmail}}",
+  "password": "{{newUserPassword}}"
+}
+
+###############################################
+### 2. Login with credentials
+POST {{baseUrl}}/api/login
+Content-Type: {{contentType}}
+
+{
+  "email": "{{userEmail}}",
+  "password": "{{userPassword}}"
+}
+
+###############################################
+### 3. Login with invalid credentials (should fail)
+POST {{baseUrl}}/api/login
+Content-Type: {{contentType}}
+
+{
+  "email": "wrong@example.com",
+  "password": "wrongpassword"
+}
+
+###############################################
+### 4. Register with missing fields (should fail)
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "email": "incomplete@example.com"
+}
+
+###############################################
+### 5. Register with existing email (should fail)
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "name": "Duplicate User",
+  "email": "{{userEmail}}",
+  "password": "anotherpassword"
+}
+
+###############################################
+### NextAuth.js Endpoints (GET requests)
+###############################################
+
+### 6. Get authentication providers
+GET {{baseUrl}}/api/auth/providers
+
+### 7. Get CSRF token
+GET {{baseUrl}}/api/auth/csrf
+
+### 8. Get current session (requires authentication)
+GET {{baseUrl}}/api/auth/session
+
+### 9. Sign out (requires authentication)
+POST {{baseUrl}}/api/auth/signout

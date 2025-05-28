@@ -1,0 +1,323 @@
+# Salary API Tests
+# REST Client file for testing salary management endpoints
+# Note: These are simulated REST endpoints - the actual app uses Server Actions
+
+### Variables
+@baseUrl = http://localhost:3000
+@contentType = application/json
+@userEmail = john.doe@example.com
+@employeeId = emp_01
+@salaryId = salary_01
+@reviewId = review_01
+
+### Get All Salaries
+GET {{baseUrl}}/api/salaries
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Salaries with Filtering
+GET {{baseUrl}}/api/salaries?employeeId={{employeeId}}&year=2025&currency=USD
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Salary by Employee
+GET {{baseUrl}}/api/employees/{{employeeId}}/salary
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Salary History
+GET {{baseUrl}}/api/employees/{{employeeId}}/salary/history
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Current Salary
+GET {{baseUrl}}/api/salaries/{{salaryId}}
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Create Salary Record
+POST {{baseUrl}}/api/salaries
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "employeeId": "{{employeeId}}",
+  "baseSalary": 75000,
+  "currency": "USD",
+  "effectiveDate": "2025-01-01T00:00:00.000Z",
+  "bonuses": [
+    {
+      "type": "PERFORMANCE",
+      "amount": 5000,
+      "description": "Q4 Performance Bonus"
+    }
+  ],
+  "benefits": [
+    {
+      "type": "HEALTH_INSURANCE",
+      "value": 3600,
+      "description": "Annual health insurance coverage"
+    },
+    {
+      "type": "RETIREMENT_401K",
+      "value": 3000,
+      "description": "Company 401k matching"
+    }
+  ]
+}
+
+### Update Salary
+PUT {{baseUrl}}/api/salaries/{{salaryId}}
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "baseSalary": 80000,
+  "bonuses": [
+    {
+      "type": "PERFORMANCE",
+      "amount": 6000,
+      "description": "Updated Q4 Performance Bonus"
+    },
+    {
+      "type": "RETENTION",
+      "amount": 2000,
+      "description": "Retention bonus"
+    }
+  ],
+  "benefits": [
+    {
+      "type": "HEALTH_INSURANCE",
+      "value": 3600,
+      "description": "Annual health insurance coverage"
+    },
+    {
+      "type": "RETIREMENT_401K",
+      "value": 3200,
+      "description": "Enhanced 401k matching"
+    },
+    {
+      "type": "PTO",
+      "value": 4000,
+      "description": "Paid time off value"
+    }
+  ]
+}
+
+### Give Raise
+PATCH {{baseUrl}}/api/salaries/{{salaryId}}/raise
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "newBaseSalary": 85000,
+  "effectiveDate": "2025-07-01T00:00:00.000Z",
+  "reason": "Annual performance review and promotion"
+}
+
+### Add Bonus
+POST {{baseUrl}}/api/salaries/{{salaryId}}/bonuses
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "type": "SPOT_BONUS",
+  "amount": 1500,
+  "description": "Recognition for exceptional project delivery",
+  "dateAwarded": "2025-01-15T00:00:00.000Z"
+}
+
+### Add Benefit
+POST {{baseUrl}}/api/salaries/{{salaryId}}/benefits
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "type": "STOCK_OPTIONS",
+  "value": 10000,
+  "description": "Annual stock option grant",
+  "startDate": "2025-01-01T00:00:00.000Z"
+}
+
+### Update Benefit
+PUT {{baseUrl}}/api/salaries/{{salaryId}}/benefits/benefit_01
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "value": 12000,
+  "description": "Updated stock option grant"
+}
+
+### Remove Benefit
+DELETE {{baseUrl}}/api/salaries/{{salaryId}}/benefits/benefit_01
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Create Salary Review
+POST {{baseUrl}}/api/salary-reviews
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "employeeId": "{{employeeId}}",
+  "reviewerId": "manager_01",
+  "reviewPeriod": "2024-Q4",
+  "currentSalary": 75000,
+  "proposedSalary": 82000,
+  "justification": "Exceptional performance and increased responsibilities",
+  "effectiveDate": "2025-01-01T00:00:00.000Z",
+  "status": "PENDING"
+}
+
+### Get Salary Reviews
+GET {{baseUrl}}/api/salary-reviews?employeeId={{employeeId}}&status=PENDING
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Update Salary Review
+PUT {{baseUrl}}/api/salary-reviews/{{reviewId}}
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "proposedSalary": 80000,
+  "justification": "Updated proposal based on budget constraints",
+  "status": "APPROVED"
+}
+
+### Approve Salary Review
+PATCH {{baseUrl}}/api/salary-reviews/{{reviewId}}/approve
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "approvedBy": "hr_manager_01",
+  "comments": "Approved based on performance metrics and market rates"
+}
+
+### Reject Salary Review
+PATCH {{baseUrl}}/api/salary-reviews/{{reviewId}}/reject
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "rejectedBy": "hr_manager_01",
+  "reason": "Budget constraints for this quarter"
+}
+
+### Get Salary Statistics
+GET {{baseUrl}}/api/salaries/statistics
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Department Salary Report
+GET {{baseUrl}}/api/salaries/reports/department?department=ENGINEERING
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Get Salary Bands
+GET {{baseUrl}}/api/salaries/bands
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Create Salary Band
+POST {{baseUrl}}/api/salaries/bands
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Senior Software Engineer",
+  "level": "L5",
+  "minSalary": 90000,
+  "maxSalary": 120000,
+  "currency": "USD",
+  "department": "ENGINEERING"
+}
+
+### Get Payroll Report
+GET {{baseUrl}}/api/payroll/report?startDate=2025-01-01&endDate=2025-01-31
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Generate Payslip
+POST {{baseUrl}}/api/payroll/payslip
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "employeeId": "{{employeeId}}",
+  "payPeriodStart": "2025-01-01T00:00:00.000Z",
+  "payPeriodEnd": "2025-01-31T00:00:00.000Z"
+}
+
+### Delete Salary Record
+DELETE {{baseUrl}}/api/salaries/{{salaryId}}
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+### Error Cases
+
+### Create Salary - Negative Amount
+POST {{baseUrl}}/api/salaries
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "employeeId": "{{employeeId}}",
+  "baseSalary": -50000,
+  "currency": "USD"
+}
+
+### Create Salary - Invalid Currency
+POST {{baseUrl}}/api/salaries
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "employeeId": "{{employeeId}}",
+  "baseSalary": 75000,
+  "currency": "INVALID"
+}
+
+### Give Raise - Effective Date in Past
+PATCH {{baseUrl}}/api/salaries/{{salaryId}}/raise
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "newBaseSalary": 85000,
+  "effectiveDate": "2023-01-01T00:00:00.000Z"
+}
+
+### Update Non-Existent Salary
+PUT {{baseUrl}}/api/salaries/non_existent_salary
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "baseSalary": 80000
+}
+
+### Unauthorized Access
+GET {{baseUrl}}/api/salaries
+Content-Type: {{contentType}}
+
+### Access Other Employee's Salary (Unauthorized)
+GET {{baseUrl}}/api/employees/other_employee/salary
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+# Server Action Equivalents:
+# These endpoints would be handled by Server Actions in the actual app:
+# 
+# getAllSalaries() - from @/lib/salary-actions
+# getSalaryByEmployee(employeeId) - from @/lib/salary-actions
+# createSalary(data) - from @/lib/salary-actions
+# updateSalary(id, data) - from @/lib/salary-actions
+# deleteSalary(id) - from @/lib/salary-actions
+# giveRaise(salaryId, data) - from @/lib/salary-actions
+# addBonus(salaryId, bonus) - from @/lib/salary-actions
+# getSalaryStatistics() - from @/lib/salary-actions
+# createSalaryReview(data) - from @/lib/salary-actions
+# approveSalaryReview(reviewId) - from @/lib/salary-actions

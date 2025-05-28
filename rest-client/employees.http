@@ -1,0 +1,147 @@
+### Employee Management API Test Cases
+### Base URL and Variables
+@baseUrl = http://localhost:3001
+@contentType = application/json
+
+### Note: These API endpoints are now available for testing
+### Authentication is required for all endpoints
+
+###############################################
+### 1. Create a new employee
+POST {{baseUrl}}/api/employees
+Content-Type: {{contentType}}
+
+{
+  "employeeId": "EMP999",
+  "name": "John Doe",
+  "email": "john.doe@company.com",
+  "joiningDate": "2024-01-15",
+  "basicSalary": 75000,
+  "department": "Engineering",
+  "position": "Software Engineer",
+  "isActive": true
+}
+
+###############################################
+### 2. Get all employees with filters
+GET {{baseUrl}}/api/employees?page=1&limit=10&sortBy=name&sortOrder=asc&search=John&department=Engineering&isActive=true
+
+###############################################
+### 3. Get employee by ID
+GET {{baseUrl}}/api/employees/emp-id-123
+
+###############################################
+### 4. Update employee
+PUT {{baseUrl}}/api/employees/emp-id-123
+Content-Type: {{contentType}}
+
+{
+  "id": "emp-id-123",
+  "name": "John Doe Updated",
+  "email": "john.doe.updated@company.com",
+  "basicSalary": 80000,
+  "department": "Engineering",
+  "position": "Senior Software Engineer",
+  "isActive": true
+}
+
+###############################################
+### 5. Soft delete employee (set isActive = false)
+DELETE {{baseUrl}}/api/employees/emp-id-123
+
+###############################################
+### 6. Restore employee (set isActive = true)
+POST {{baseUrl}}/api/employees/emp-id-123/restore
+
+###############################################
+### 7. Get employee statistics
+GET {{baseUrl}}/api/employees/stats
+
+###############################################
+### 8. Create employee with validation errors (should fail)
+POST {{baseUrl}}/api/employees
+Content-Type: {{contentType}}
+
+{
+  "employeeId": "",
+  "name": "",
+  "basicSalary": -1000,
+  "department": "InvalidDepartment"
+}
+
+###############################################
+### 9. Create employee with duplicate ID (should fail)
+POST {{baseUrl}}/api/employees
+Content-Type: {{contentType}}
+
+{
+  "employeeId": "EMP001",
+  "name": "Duplicate Employee",
+  "email": "duplicate@company.com",
+  "joiningDate": "2024-01-15",
+  "basicSalary": 50000,
+  "department": "HR",
+  "position": "HR Assistant"
+}
+
+###############################################
+### 10. Get employees with pagination
+GET {{baseUrl}}/api/employees?page=2&limit=5
+
+###############################################
+### 11. Filter employees by department
+GET {{baseUrl}}/api/employees?department=Engineering
+
+###############################################
+### 12. Filter employees by status
+GET {{baseUrl}}/api/employees?isActive=false
+
+###############################################
+### 13. Search employees
+GET {{baseUrl}}/api/employees?search=Sarah
+
+###############################################
+### 14. Sort employees by salary (descending)
+GET {{baseUrl}}/api/employees?sortBy=basicSalary&sortOrder=desc
+
+###############################################
+### Server Action Equivalents (How they're actually called in the app)
+###############################################
+
+### Example data for testing Server Actions:
+### These are the actual function calls used in the application
+
+// createEmployee({
+//   employeeId: "EMP999",
+//   name: "John Doe",
+//   email: "john.doe@company.com",
+//   joiningDate: new Date("2024-01-15"),
+//   basicSalary: 75000,
+//   department: "Engineering",
+//   position: "Software Engineer",
+//   isActive: true
+// })
+
+// getEmployees({
+//   page: 1,
+//   limit: 10,
+//   sortBy: "name",
+//   sortOrder: "asc",
+//   search: "John",
+//   department: "Engineering",
+//   isActive: true
+// })
+
+// getEmployee("emp-id-123")
+
+// updateEmployee({
+//   id: "emp-id-123",
+//   name: "John Doe Updated",
+//   basicSalary: 80000
+// })
+
+// deleteEmployee("emp-id-123")
+
+// restoreEmployee("emp-id-123")
+
+// getEmployeeStats()

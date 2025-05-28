@@ -1,0 +1,80 @@
+### Chatbot API Endpoints
+### Base URL and Variables
+@baseUrl = http://localhost:3001
+@contentType = application/json
+
+### Note: These requests require authentication
+### You need to login first and have a valid session
+
+###############################################
+### 1. Send a simple message to chatbot
+POST {{baseUrl}}/api/chatbot
+Content-Type: {{contentType}}
+
+{
+  "message": "Hello, how can you help me with HR management?"
+}
+
+###############################################
+### 2. Ask about employee management
+POST {{baseUrl}}/api/chatbot
+Content-Type: {{contentType}}
+
+{
+  "message": "How do I add a new employee to the system?"
+}
+
+###############################################
+### 3. Ask about project management
+POST {{baseUrl}}/api/chatbot
+Content-Type: {{contentType}}
+
+{
+  "message": "Show me how to create a new project and assign tasks"
+}
+
+###############################################
+### 4. Ask about salary management
+POST {{baseUrl}}/api/chatbot
+Content-Type: {{contentType}}
+
+{
+  "message": "How do I process monthly salaries for all employees?"
+}
+
+###############################################
+### 5. Ask for system statistics
+POST {{baseUrl}}/api/chatbot
+Content-Type: {{contentType}}
+
+{
+  "message": "What are the current company statistics and metrics?"
+}
+
+###############################################
+### 6. Request with empty message (should fail)
+POST {{baseUrl}}/api/chatbot
+Content-Type: {{contentType}}
+
+{
+  "message": ""
+}
+
+###############################################
+### 7. Request without message field (should fail)
+POST {{baseUrl}}/api/chatbot
+Content-Type: {{contentType}}
+
+{
+  "text": "This should fail because field name is wrong"
+}
+
+###############################################
+### 8. Unauthorized request (without login)
+### This should return 401 Unauthorized
+POST {{baseUrl}}/api/chatbot
+Content-Type: {{contentType}}
+
+{
+  "message": "This should fail without authentication"
+}
