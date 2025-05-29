@@ -130,17 +130,17 @@ export async function getEmployees(filters: Partial<EmployeeFilter> = {}): Promi
 
     // Validate filters
     const validatedFilters = employeeFilterSchema.parse(filtersWithDefaults);
-    const { search, department, isActive, page, limit, sortBy, sortOrder } = validatedFilters; // Build where clause
+    const { search, department, isActive, page, limit, sortBy, sortOrder } = validatedFilters; // Build where clause (SQLite doesn't support mode: "insensitive")
     const where = {
       userId: user.id,
       ...(isActive !== undefined && { isActive }),
       ...(department && { department }),
       ...(search && {
         OR: [
-          { name: { contains: search, mode: "insensitive" } },
-          { employeeId: { contains: search, mode: "insensitive" } },
-          { email: { contains: search, mode: "insensitive" } },
-          { position: { contains: search, mode: "insensitive" } },
+          { name: { contains: search } },
+          { employeeId: { contains: search } },
+          { email: { contains: search } },
+          { position: { contains: search } },
         ],
       }),
     } as const;

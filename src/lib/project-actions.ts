@@ -152,16 +152,11 @@ export async function getProjects(filters: ProjectFilters = {}): Promise<Project
       throw new Error("Authentication required");
     }
 
-    const where: any = {
-      userId: user.id,
-    };
+    const where: any = { userId: user.id };
 
-    // Apply filters
+    // Apply filters (SQLite doesn't support mode: "insensitive")
     if (filters.search) {
-      where.OR = [
-        { title: { contains: filters.search, mode: "insensitive" } },
-        { description: { contains: filters.search, mode: "insensitive" } },
-      ];
+      where.OR = [{ title: { contains: filters.search } }, { description: { contains: filters.search } }];
     }
     if (filters.status) where.status = filters.status;
     if (filters.startDateFrom || filters.startDateTo) {
@@ -480,12 +475,9 @@ export async function getTasks(filters: TaskFilters = {}): Promise<TaskWithAssig
       },
     };
 
-    // Apply filters
+    // Apply filters (SQLite doesn't support mode: "insensitive")
     if (filters.search) {
-      where.OR = [
-        { title: { contains: filters.search, mode: "insensitive" } },
-        { description: { contains: filters.search, mode: "insensitive" } },
-      ];
+      where.OR = [{ title: { contains: filters.search } }, { description: { contains: filters.search } }];
     }
     if (filters.status) where.status = filters.status;
     if (filters.priority) where.priority = filters.priority;
